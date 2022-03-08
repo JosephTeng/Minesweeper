@@ -1,6 +1,6 @@
 import de.bezier.guido.*;
-public static int NUM_ROWS = 5;
-public static int NUM_COLS = 5;
+public static int NUM_ROWS = 20;
+public static int NUM_COLS = 20;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines; //ArrayList of just the minesweeper buttons that are mined
 
@@ -25,9 +25,9 @@ void setup ()
 }
 public void setMines()
 {
-  for(int i = 0; i < 5; i++){
-   int row = (int)(Math.random()*5);
-   int col = (int)(Math.random()*5);
+  for(int i = 0; i < 30; i++){
+   int row = (int)(Math.random()*20);
+   int col = (int)(Math.random()*20);
    if(mines.contains(buttons[row][col]) == false){
      mines.add(buttons[row][col]);
    }
@@ -43,21 +43,42 @@ public void draw ()
 }
 public boolean isWon()
 {
-    for(int i = 0; i < NUM_ROWS; i++){
-      for(int j = 0; j < NUM_COLS; j++){
-        if(!mines.contains(buttons[i][j]) && buttons[i][j].clicked == false)
-          return false;
-      }
+    int markMines= 0;
+    for(int i = 0; i < mines.size(); i++)
+    {
+        if(mines.get(i).isFlagged() == true)
+        {
+            markMines++;
+        }
     }
-    return true;
+    if(markMines == mines.size())
+    {
+        return true;
+    }
+    return false;
 }
 public void displayLosingMessage()
 {
-    text("you lose", 50, 50);
+    for(int i = 0; i < mines.size(); i++){
+      mines.get(i).clicked = true;
+    }
+    buttons[9][8].setLabel("Y");
+    buttons[9][9].setLabel("O");
+    buttons[9][10].setLabel("U");
+    buttons[10][8].setLabel("L");
+    buttons[10][9].setLabel("O");
+    buttons[10][10].setLabel("S");
+    buttons[10][11].setLabel("E");
 }
 public void displayWinningMessage()
 {
-    text("you win", 50, 50);
+    buttons[9][8].setLabel("Y");
+    buttons[9][9].setLabel("O");
+    buttons[9][10].setLabel("U");
+    buttons[10][8].setLabel("W");
+    buttons[10][9].setLabel("I");
+    buttons[10][10].setLabel("N");
+    buttons[10][11].setLabel("!");
 }
 public boolean isValid(int r, int c)
 {
@@ -118,7 +139,7 @@ public class MSButton
         else{
           for(int i = myRow-1; i <= myRow+1; i++){
             for(int j = myCol-1; j <= myCol+1; j++){
-               if(isValid(i,j) && clicked){
+               if(isValid(i,j) == true && buttons[i][j].clicked == false){
                   buttons[i][j].mousePressed();
                }  
             } 
